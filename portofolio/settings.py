@@ -3,7 +3,10 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "ali-jundi-myportofolio.pws.cs.ui.ac.id"]
+ALLOWED_HOSTS = ["localhost", 
+                 "127.0.0.1", 
+                 "ali-jundi-myportofolio.pws.cs.ui.ac.id",
+                 "*.pws.cs.ui.ac.id",]
 
 PRODUCTION = os.getenv('PRODUCTION', 'False').lower() == 'true'
 
