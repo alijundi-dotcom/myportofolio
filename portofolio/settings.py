@@ -7,7 +7,8 @@ ALLOWED_HOSTS = ["localhost",
                  "127.0.0.1", 
                  "ali-jundi-myportofolio.pws.cs.ui.ac.id",
                  "*.pws.cs.ui.ac.id",
-                 'ali-jundi-myportofolio.pws.cs.ui.ac.id',]
+                 'ali-jundi-myportofolio.pws.cs.ui.ac.id',
+                 '*']  # allow all host buat tes aja soalnya ali-jundi kaga bisa dah ini gatau kenapa
 
 PRODUCTION = os.getenv('PRODUCTION', 'False').lower() == 'true'
 
