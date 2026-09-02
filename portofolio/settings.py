@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
-ALLOWED_HOSTS = ['ali-jundi-myportofolio.pws.cs.ui.ac.id', 'localhost', '127.0.0.1', '*']  # allow all host buat tes aja soalnya ali-jundi kaga bisa dah ini gatau kenapaa
+ALLOWED_HOSTS = ['ali-jundi-myportofolio.pws.cs.ui.ac.id', 'localhost', '127.0.0.1']  
 
 PRODUCTION = os.getenv('PRODUCTION', 'False').lower() == 'true'
 
