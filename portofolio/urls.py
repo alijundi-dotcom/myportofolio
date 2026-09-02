@@ -18,8 +18,10 @@ from django.contrib import admin
 from django.urls import path
 
 from portofolio.views import landing_page
+from portofolio.views import burhan_page
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', landing_page, name ='index.html'),
+    path('', landing_page, name ='index'),
+    path('burhan/',burhan_page, name="burhan")
 ]

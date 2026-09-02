@@ -3,8 +3,7 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
-ALLOWED_HOSTS = ['ali-jundi-myportofolio.pws.cs.ui.ac.id']  #tambah komen dikit biar bisa commit 
-#beberapa commit awal failed karena di pws lupa ganti allowed hosts
+#yang ALLOWED_HOSTS di sini kuhapus soalnya ada double.
 
 PRODUCTION = os.getenv('PRODUCTION', 'False').lower() == 'true'
 
@@ -35,7 +34,7 @@ SECRET_KEY = 'django-insecure-78l=)nr+s69k@skds3+f)rb3*(ch_mk=#9(6((v9!9(i11)c!f
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ali-jundi-myportofolio.pws.cs.ui.ac.id']
+ALLOWED_HOSTS = ['ali-jundi-myportofolio.pws.cs.ui.ac.id', '127.0.0.1', 'localhost']
 
 
 # Application definition
