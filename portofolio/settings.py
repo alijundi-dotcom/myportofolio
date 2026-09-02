@@ -3,7 +3,8 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
-ALLOWED_HOSTS = ['ali-jundi-myportofolio.pws.cs.ui.ac.id']  
+ALLOWED_HOSTS = ['ali-jundi-myportofolio.pws.cs.ui.ac.id']  #tambah komen dikit biar bisa commit 
+#beberapa commit awal failed karena di pws lupa ganti allowed hosts
 
 PRODUCTION = os.getenv('PRODUCTION', 'False').lower() == 'true'
 
