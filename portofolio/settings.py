@@ -8,7 +8,7 @@ ALLOWED_HOSTS = ["localhost",
                  "ali-jundi-myportofolio.pws.cs.ui.ac.id",
                  "*.pws.cs.ui.ac.id",
                  'ali-jundi-myportofolio.pws.cs.ui.ac.id',
-                 '*']  # allow all host buat tes aja soalnya ali-jundi kaga bisa dah ini gatau kenapa
+                 '*']  # allow all host buat tes aja soalnya ali-jundi kaga bisa dah ini gatau kenapaa
 
 PRODUCTION = os.getenv('PRODUCTION', 'False').lower() == 'true'
 
