@@ -19,9 +19,11 @@ from django.urls import path
 
 from portofolio.views import landing_page
 from portofolio.views import burhan_page
+from portofolio.views import skills_page
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', landing_page, name ='index'),
-    path('burhan/',burhan_page, name="burhan")
+    path('burhan/',burhan_page, name="burhan"),
+    path('skills/', skills_page, name= 'skills' ),
 ]

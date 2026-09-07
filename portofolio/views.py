@@ -5,3 +5,5 @@ def landing_page(request):
     return render(request, "index.html")
 def burhan_page(request):
     return render(request, "burhan.html")
+def skills_page(request):
+    return render(request, "skills.html")
