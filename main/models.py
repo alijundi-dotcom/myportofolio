@@ -25,3 +25,25 @@ class Experience(models.Model):
     @property
     def is_ongoing(self):
         return self.ended_at is None
+    
+class Musics(models.Model):
+    MUSIC_CHOICES ={
+        ('keren', 'Keren'),
+        ('nasional', 'Nasional'),
+        ('semangat', 'Semangat'),
+        ('lawas', 'Lawas')
+    }
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    category = models.CharField(max_length=20, choices=MUSIC_CHOICES, default='keren')
+    thumbnail = models.URLField(blank=True, null=True)
+    started_at = models.DateTimeField(auto_now_add=True)
+    ended_at = models.DateTimeField(blank=True, null=True)
+    def __str__(self):
+        return self.title
+        
+    @property
+    def is_ongoing(self):
+        return self.ended_at is None

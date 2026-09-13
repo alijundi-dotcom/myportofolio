@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
-from main.models import Experience
+from main.models import Experience, Musics
 
 # Create your tests here.
 
@@ -11,6 +11,8 @@ class MainTest(TestCase):
             title="Asisten Dosen PBP",
             description="Membantu mahasiswa memahami pengembangan web.",
             category="part-time",
+
+            
         )
 
     def test_main_url_is_accessible(self):

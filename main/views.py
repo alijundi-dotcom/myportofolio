@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 from main.models import Experience
+from main.models import Musics
 
 # Create your views here.
 
@@ -24,3 +25,11 @@ def show_experience(request):
         "experience_list": Experience.objects.all(),
     }
     return render(request, "experience.html", context)
+
+def show_music(request):
+    context = {
+        "name": "Ali",
+        "music_list": Musics.objects.all(),
+
+    }
+    return render(request, "musics.html", context)
