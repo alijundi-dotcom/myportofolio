@@ -15,5 +15,11 @@ https://gemini.google.com/share/d/1PCadbqBAjLSJzE5rnNK6G_FwFwb41P_1?usp=sharing
 3. Kalau mau nambah konten, misal skill atau pengalaman itu manual dan harus tulis ulang seluruh kode. Pengennya sih bisa langsung diubah seperti inspect atau semacamnya. Tambahan: mau buat dark mode tapi belum belajar js huhuhu.
 
 Update 13/9/26: Sedikit cerita. Tentu saja saya gunakan AI karena sudah malam dan agak ngantuk. tapi ga semata-mata saya full copy paste. Hanya melihat beberapa baris kode yang perlu diubah dan kadang lupa beberapa hal(seperti cara nambahin musik lupa)...
+### Tugas 2
+1. urls.py terhubung dengan views.py. Di views.py ada fungsi-fungsi yang akan menampilkan masing-masing model, contoh Music dan Experience.
+fungsi show akan mengarahkan ke url sesuai template(misal musics.html atau experience.html) yang diberikan pada fungsi
 
+2. Karena lebih rapih. Meminimalisir pengembang seperti saya mengoprek-oprek kode panjang di template.
+
+3. makemigrations membuat migrasi baru, misal saya membuat model baru bernama Music. Kemudian fungsi migrate itu untuk menerapkan migrasi tersebut. Contoh perubahan model saya tambahkan Music. Agar dapat teraplikasi di webnya saya gunakan kedua fungsi tersebut
 
