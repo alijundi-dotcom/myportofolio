@@ -25,3 +25,4 @@ fungsi show akan mengarahkan ke url sesuai template(misal musics.html atau exper
 
 14/9/26: coba push ke pws
         -ubah ke django~=5.0
+        -oke tadi lupa nulis pip m install requirements.txt
