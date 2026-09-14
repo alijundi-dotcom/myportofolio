@@ -24,3 +24,4 @@ fungsi show akan mengarahkan ke url sesuai template(misal musics.html atau exper
 3. makemigrations membuat migrasi baru, misal saya membuat model baru bernama Music. Kemudian fungsi migrate itu untuk menerapkan migrasi tersebut. Contoh perubahan model saya tambahkan Music. Agar dapat teraplikasi di webnya saya gunakan kedua fungsi tersebut
 
 14/9/26: coba push ke pws
+        -ubah ke django~=5.0
