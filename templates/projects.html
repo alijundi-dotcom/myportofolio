@@ -18,7 +18,6 @@
             <nav>
                 <a href="{% url 'main:show_main' %}">Profile</a>
                 <a href="{% url 'main:show_experience' %}">Experience</a>
-                <a href="{% url 'main:show_projects' %}">Projects</a>
                 <a href="{% url 'main:show_music' %}">Music</a>
 
             </nav>
@@ -28,29 +27,25 @@
     <main>
         <section class="experience-section" id="experience">
             <div class="container">
-                <p class="section-kicker">Perjalanan saya sejauh ini</p>
-                <h1>Experience</h1>
+                <p class="section-kicker">Beberapa projek yang saya kerjakan</p>
+                <h1>All Projects</h1>
 
                 <div class="experience-grid">
-                    {% for experience in experience_list %}
+                    {% for project in project_list %}
                         <article class="experience-card2">
                             <span class="experience-category">
-                                {{ experience.get_category_display }}
+                                {{ project.get_category_display }}
                             </span>
-                            <h2>{{ experience.title }}</h2>
+                            <h2>{{ project.title }}</h2>
                             <p class="experience-description">
-                                {{ experience.description }}
+                                {{ project.description }}
                             </p>
 
-                            {% if experience.is_ongoing %}
-                                <p class="experience-status">Sedang berlangsung</p>
-                            {% else %}
-                                <p class="experience-status">Selesai</p>
-                            {% endif %}
+                            
                         </article>
                     {% empty %}
                         <p class="empty-state">
-                            Belum ada pengalaman yang ditambahkan.
+                            Belum ada PROJEK yang ditambahkan.
                         </p>
                     {% endfor %}
                 </div>
