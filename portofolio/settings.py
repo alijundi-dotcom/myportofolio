@@ -6,7 +6,7 @@ load_dotenv()
 #yang ALLOWED_HOSTS di sini kuhapus soalnya ada double.
 
 PRODUCTION = os.getenv('PRODUCTION', 'False').lower() == 'true'
-
+CSRF_TRUSTED_ORIGINS = ["https://ali-jundi-myportofolio.pws.cs.ui.ac.id/"]
 """
 Django settings for portofolio project.
 

@@ -1,3 +1,4 @@
+{% extends 'base.html' %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,6 +25,7 @@
         </div>
     </header>
 
+    {% block content %}
     <main>
         <section class="hero" id="profile">
             <div class="container hero-grid">
@@ -50,6 +52,7 @@
                             <dd>{{ study_program }}</dd>
                         </div>
                     </dl>
+                    
                     <div class="social-links">
                         <a href="https://github.com/alijundi-dotcom" class="social-link">GitHub</a>
                         <a href="https://id.linkedin.com/in/burhan-kurniawan-98a25b2a" class="social-link">LinkedIn</a>
@@ -61,7 +64,7 @@
             </div>
         </section>
     </main>
-
+    {% endblock content %}
     <footer class="site-footer">
         <div class="container">
             <p>&copy; 2026 {{ name }}. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
