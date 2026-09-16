@@ -5,7 +5,10 @@ from main.views import (
     show_experience, 
     show_music,
     show_projects,
-    create_project)
+    create_project,
+    get_projects_json,
+    delete_project,
+    )
 
 app_name = "main"
 
@@ -15,4 +18,6 @@ urlpatterns = [
     path("musics/", show_music, name="show_music"),
     path("projects/", show_projects, name="show_projects"),
     path("projects/add/", create_project, name="create_project"),
+    path("api/projects/", get_projects_json, name="get_projects_json"),
+    path("projects/<uuid:project_id>/delete/",delete_project,name="delete_project"),
 ]

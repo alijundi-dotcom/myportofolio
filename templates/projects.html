@@ -18,6 +18,8 @@
             <nav>
                 <a href="{% url 'main:show_main' %}">Profile</a>
                 <a href="{% url 'main:show_experience' %}">Experience</a>
+                <a href="{% url 'main:show_projects' %}">Projects</a>
+
                 <a href="{% url 'main:show_music' %}">Music</a>
 
             </nav>
@@ -29,24 +31,54 @@
             <div class="container">
                 <p class="section-kicker">Beberapa projek yang saya kerjakan</p>
                 <h1>All Projects</h1>
-
+                <a href="{% url 'main:create_project' %}"
+                       class="button project-add-button">
+                        <span aria-hidden="true">+</span>
+                        Tambah Proyek
+                </a>
+                <form method="get"
+                      action="{% url 'main:show_projects' %}"
+                      class="project-search">
+                    <input type="search"
+                           name="title"
+                           value="{{ title_query }}"
+                           placeholder="Cari berdasarkan nama proyek"
+                           class="project-search__input"
+                           aria-label="Cari berdasarkan nama proyek">
+                    <button type="submit" class="button">Cari</button>
+                </form>
                 <div class="experience-grid">
                     {% for project in project_list %}
                         <article class="experience-card2">
+                            {% if project.project_image_url %}
+                                <div>
+                                    <img src="{{ project.project_image_url }}"
+                                    alt="{{project.title}}"
+                                    style="width:100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 12px;"/>
+                                </div>
+                            {% endif %}
                             <span class="experience-category">
-                                {{ project.get_category_display }}
+                                {{ project.tech_stack }}
                             </span>
                             <h2>{{ project.title }}</h2>
-                            <p class="experience-description">
-                                {{ project.description }}
-                            </p>
-
-                            
+                            <p class="experience-description">{{ project.description }}</p>
+                            <div class="project-card-actions">
+                                <div class="project-actions">
+                                {% if project.project_url %}
+                                    <p class ="experience-status">
+                                        <a href="{{project.project_url}}">Lihat Proyek</a>
+                                    </p>
+                                {% endif %}
+                                {% include "components/project_delete_modal.html" with project=project %}
+                                </div>
+                            </div>
                         </article>
                     {% empty %}
-                        <p class="empty-state">
-                            Belum ada PROJEK yang ditambahkan.
-                        </p>
+                        {% if title_query %}
+                            <p class="empty-state">Belum ada PROJEK yang ditambahkan.</p>
+                        {% else %}
+                            <p class="empty-state">Belum ada proyek yang ditambahkan.</p>
+                        {% endif %}
                     {% endfor %}
                 </div>
             </div>
