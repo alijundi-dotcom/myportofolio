@@ -1,3 +1,4 @@
+{% extends "base.html" %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,15 +11,8 @@
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-    <header class="site-header">
-        <div class="container">
-            <a href="#profile" class="brand">Mau lihat burhan? Nih!</a>
-            <nav>
-                <a href="#profile">Profile</a>
-            </nav>
-        </div>
-    </header>
-
+    
+    {% block content %}
     <main>
         <section class="hero" id="profile">
             <div class="container hero-grid">
@@ -39,7 +33,7 @@
             </div>
         </section>
     </main>
-
+    {% endblock content %}
     <footer class="site-footer">
         <div class="container">
             <p>&copy; 2026 Ali. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
