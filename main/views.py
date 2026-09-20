@@ -1,12 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.core import serializers
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
-from main.models import Experience
-from main.models import Musics
-from main.models import Project
-from main.forms import ProjectForm
+from main.models import Experience, Project, Musics
+from main.forms import ProjectForm, MusicForm
 
 # Create your views here.
 
@@ -26,6 +24,49 @@ def create_project(request):
     return render(request, "projects_form.html", context)
 ##TUTORIAL 3 END ###
 
+### TUGAS 3
+
+## fitur tambah musik
+def create_music(request):
+    form = MusicForm(request.POST or None)
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Musik Anda berhasil ditambahkan!")
+        return redirect("main:show_music")
+
+    context = {
+            "name": "Ali",
+            "form": form,
+        }
+    
+    return render(request, "musics_form.html", context)
+
+# fitur edit musik 
+def edit_music(request, music_id):
+    music = get_object_or_404(Musics, pk=music_id)
+    form = MusicForm(request.POST or None, isinstance=music)
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        return redirect("main:show_music")
+    
+    context = {
+                "name": "Ali",
+                "form": form,
+            }
+        
+    return render(request, "edit_music.html", context)
+
+#fitur hapus musik -- delete
+def delete_music(request, music_id):
+    music = get_object_or_404(Musics, pk=music_id)
+    music.delete()
+    return redirect("main:show_music")
+
+def show_json_music(request):
+    data = Musics.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+### END TUGAS 3
 def show_main(request):
     context = {
         "name": "Ali Jundi Qowi",

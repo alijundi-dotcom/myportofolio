@@ -1,7 +1,20 @@
-from django.forms import ModelForm, TextInput, Textarea, URLInput
+from django.forms import ModelForm, TextInput, Textarea, URLInput, forms
 
-from main.models import Project
+from main.models import Project, Musics
 
+# Tambahan model form untuk Tugas 3
+class MusicForm(ModelForm):
+    class Meta:
+        model = Musics
+        fields = [
+            "title",
+            "description",
+            "category",
+            "thumbnail",
+        ]
+# END Tugas 3
+
+# Di bawah ini dari Tutorial 3
 class ProjectForm(ModelForm):
     class Meta:
         model = Project
@@ -50,3 +63,4 @@ class ProjectForm(ModelForm):
                 }
             ),
         }
+# Tutorial 3 END
