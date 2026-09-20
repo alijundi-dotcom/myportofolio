@@ -35,3 +35,5 @@ TAMBAHAN: aku lupa tadi malam sempa mengerjakan sedikit tutorial. commit sebelun
 Banyak sih yang ditambahin kayak project_delete, project create, tombol pencarian, dan lain-lain
 
 20/9/26: oh iya tadi sebenernya ada beberapa yang belum dirapihin. Belum semuanya dirapiin setelah dicek. jadi kuperhatikan ulang kodenya dan kurapihkan lagi.
+
+Udah beres tambah fitur add music, delete sama edit eh rupanya aku salah beberapa variabel misal harusnya "id" tapi malah "music_id" thanks to Gemini AI yang mau ngoreksi saya.

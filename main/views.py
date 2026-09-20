@@ -42,9 +42,9 @@ def create_music(request):
     return render(request, "musics_form.html", context)
 
 # fitur edit musik 
-def edit_music(request, music_id):
-    music = get_object_or_404(Musics, pk=music_id)
-    form = MusicForm(request.POST or None, isinstance=music)
+def edit_music(request, id):
+    music = get_object_or_404(Musics, pk=id)
+    form = MusicForm(request.POST or None, instance=music)
     if request.method == "POST" and form.is_valid():
         form.save()
         return redirect("main:show_music")
@@ -57,8 +57,8 @@ def edit_music(request, music_id):
     return render(request, "edit_music.html", context)
 
 #fitur hapus musik -- delete
-def delete_music(request, music_id):
-    music = get_object_or_404(Musics, pk=music_id)
+def delete_music(request, id):
+    music = get_object_or_404(Musics, pk=id)
     music.delete()
     return redirect("main:show_music")
 
