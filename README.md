@@ -26,7 +26,12 @@ fungsi show akan mengarahkan ke url sesuai template(misal musics.html atau exper
 14/9/26: coba push ke pws
         -ubah ke django~=5.0
         -oke tadi lupa nulis pip m install requirements.txt
+
 15/9/26: oke ternyata aku lupa ubah beberap key dalam environment variable. coba push ulang biar ke deploy 
+
 TAMBAHAN: aku lupa tadi malam sempa mengerjakan sedikit tutorial. commit sebelunya lupa kusebut pengerjaan ini. Tapi tutorialnya belum selesai.  
+
 16/9/26: Selesai Tutorial 1. Tapi nampaknya desain webnya belum rapi.
 Banyak sih yang ditambahin kayak project_delete, project create, tombol pencarian, dan lain-lain
+
+20/9/26: oh iya tadi sebenernya ada beberapa yang belum dirapihin. Belum semuanya dirapiin setelah dicek. jadi kuperhatikan ulang kodenya dan kurapihkan lagi.
