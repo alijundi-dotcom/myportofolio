@@ -37,3 +37,16 @@ Banyak sih yang ditambahin kayak project_delete, project create, tombol pencaria
 20/9/26: oh iya tadi sebenernya ada beberapa yang belum dirapihin. Belum semuanya dirapiin setelah dicek. jadi kuperhatikan ulang kodenya dan kurapihkan lagi.
 
 Udah beres tambah fitur add music, delete sama edit eh rupanya aku salah beberapa variabel misal harusnya "id" tapi malah "music_id" thanks to Gemini AI yang mau ngoreksi saya.
+
+21/9/26: Aku mau nambahin tugas pertanyaan reflektif
+### Tugas 3
+
+1. Kita pakai yang sudah disediakan Django karena kalau pakai HTML manual, kita harus cek satu satu apakah ada serangan berbahaya dari input. Django forms memberi kemananan input. Model django juga terintegrasi dengan database langsung
+Csrf token wajib di sini agar lebih aman dari serangan luar.
+
+2. JSON lebih disukai karena lebih mudah dari XML. Developer web juga mau yang lebih cepat dan menghasilkan lebih besar kan. Jadi JSON lebih disukai. Intinya memudahkan developer. 
+
+2. Misal ada dua kotak yang sama, yang satu lagu Indonesia Raya sementara di sebelahnya ada lagu Indonesia Raya juga, ID berguna untuk memberikan masing-masing kode unik. Jadi django tidak bingung kalau mau edit atau hapus
+3. Alur dari request( klien minta akses http), lalu ke routing ke url, lanjut ambil data portofolio dari database. Data yang dihasilkan berbentuk kumpulan objek python, serialisasi kemudian mengubah objek objek model tersebut jadi format data sederhana seperti list atau dict. Kemudian dikonversi jadi string dengan format JSON. Response mengembalikan data JSON ke klien menggunakan HttpResponse atau JsonResponse. Data JSON siap dipakai.
+
+Serialization diperlukan untuk mengatasi ketidakcocokan format dan standardisasi format data. JSON merupakan standar format pertukaran data secara universal di web. Serialization bertugas mengubaj objek django ke format teks JSON yang mudah dibaca dan diolah JavaScript di frontend
