@@ -61,3 +61,5 @@ link: https://gemini.google.com/share/d/13nF-qHX0Uwndu-xSGauHjhG83Ia2HRb2?usp=sh
 -----------------------------------------
 22/9/26: mulai tutorial 4, semoga selesai hari ini
 Bagian 1 beres nambahin fitur login logout.
+Bagian 2 dan 3 beres, lumayan lama ngerjainnya
+Oh iya bagian yang opsional menarik sih, tapi nanti kukerjakan, mau istirahat dulu
