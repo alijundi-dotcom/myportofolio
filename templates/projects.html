@@ -11,12 +11,16 @@
             <div class="container">
                 <p class="section-kicker">Beberapa projek yang saya kerjakan</p>
                 <h1>All Projects</h1>
-                <a href="{% url 'main:create_project' %}"
-                       class="button project-add-button"
-                       style="background-color: brown;">
-                        <span aria-hidden="true">+</span>
-                        Tambah Proyek
-                </a>
+                <!-- TOMBOL TAMBAH PROYEK-->
+                {% if user.is_superuser %}  {# Tambahkan baris ini, Tutor 4 #}
+                    <a href="{% url 'main:create_project' %}"
+                        class="button project-add-button"
+                        style="background-color: brown;">
+                            <span aria-hidden="true">+</span>
+                            Tambah Proyek
+                    </a>
+                {% endif %}                 {# Tambahkan baris ini, Tutor 4 #}
+                <!-- END TOMBOL TAMBAH PROYEK-->
                 <form method="get"
                       action="{% url 'main:show_projects' %}"
                       class="project-search">
@@ -50,7 +54,12 @@
                                         <a href="{{project.project_url}}">Lihat Proyek</a>
                                     </p>
                                 {% endif %}
-                                {% include "components/project_delete_modal.html" with project=project %}
+                                <!-- TOMBOL HAPUS -->
+                                {% if user.is_superuser %}  {# Tambahkan baris ini , Tutor 4#}
+                                    {% include "components/project_star.html" with project=project %}
+                                    {% include "components/project_delete_modal.html" with project=project %}
+                                {% endif %}                 {# Tambahkan baris ini, TUtor 4 #}
+                                <!-- END TOMBOL HAPUS -->
                                 </div>
                             </div>
                         </article>
