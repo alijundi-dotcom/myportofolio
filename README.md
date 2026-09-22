@@ -59,3 +59,5 @@ link: https://gemini.google.com/share/d/13nF-qHX0Uwndu-xSGauHjhG83Ia2HRb2?usp=sh
 1. Debugging dan memahami pesan error Djago ketika beberapa url tidak bekerja
 2. Membantu menjelaskan konsep teori
 -----------------------------------------
+22/9/26: mulai tutorial 4, semoga selesai hari ini
+Bagian 1 beres nambahin fitur login logout.

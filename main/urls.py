@@ -12,6 +12,9 @@ from main.views import (
     create_project,
     get_projects_json,
     delete_project,
+    register,
+    login_user,
+    logout_user
     )
 
 app_name = "main"
@@ -19,16 +22,22 @@ app_name = "main"
 urlpatterns = [
     path("", show_main, name="show_main"),
     path("experience/", show_experience, name="show_experience"),
-
     path("musics/", show_music, name="show_music"),
+    #Tugas 3
     path("musics/add", create_music, name="create_music"),
     path("musics/edit/<uuid:id>", edit_music, name="edit_music"),
     path("musics/delete/<uuid:id>", delete_music, name="delete_music"),
     path("musics/json/", show_json_music, name="show_json_musico"),
-
+    # END Tugas 3
+    # Tutorial 3
     path("projects/", show_projects, name="show_projects"),
     path("projects/add/", create_project, name="create_project"),
     path("api/projects/", get_projects_json, name="get_projects_json"),
     path("projects/<uuid:project_id>/delete/",delete_project,name="delete_project"),
-
+    # END Tutorial 3
+    # Tutorial 4
+    path("register/", register, name="register"),
+    path("login/", login_user, name="login"),
+    path("logout/", logout_user, name="logout"),
+    # END Tutorial 4
 ]
