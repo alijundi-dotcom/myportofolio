@@ -1,3 +1,5 @@
+import datetime
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth import login, logout 
@@ -70,6 +72,8 @@ def show_json_music(request):
 
 ### END TUGAS 3
 def show_main(request):
+    #baca cookie last login
+    last_login = request.COOKIES.get('last_login', 'Belum ada sesi login / Cookie tidak ditemukan')
     context = {
         "name": "Ali Jundi Qowi",
         "npm": "2506611585",
@@ -79,6 +83,7 @@ def show_main(request):
             "pada pengembangan perangkat lunak dan pendidikan."
             "Mahasiswa yang juga tertarik gaya gravitasi bumi"
         ),
+        "last_login": last_login, 
     }
     return render(request, "index.html", context)
 
@@ -159,9 +164,11 @@ def login_user(request):
     form = AuthenticationForm(request, data=request.POST or None)
 
     if request.method == "POST" and form.is_valid():
-        login(request, form.get_user())
-        return redirect("main:show_main")
-
+        user = form.get_user();
+        login(request, user)
+        response = redirect("main:show_main")
+        response.set_cookie('last_login', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        return response
     context = {
         "name": "Ali", #ubah nama pemilik
         "form": form,
@@ -171,6 +178,9 @@ def login_user(request):
 # logout
 def logout_user(request):
     logout(request)
-    return redirect("main:show_main")
+    respone = redirect("main:show_main")
+    respone.delete_cookie('last_login')
+    return respone
+    # fungsi diubah untuk menghapus cookie saat logout
 
 # End Tutorial 4
