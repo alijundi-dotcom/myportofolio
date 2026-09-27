@@ -12,6 +12,7 @@ from main.views import (
     create_project,
     get_projects_json,
     delete_project,
+    edit_project,
     register,
     login_user,
     logout_user,
@@ -35,6 +36,7 @@ urlpatterns = [
     path("projects/add/", create_project, name="create_project"),
     path("api/projects/", get_projects_json, name="get_projects_json"),
     path("projects/<uuid:id>/delete/",delete_project,name="delete_project"),
+    path("projects/edit/<uuid:id>", edit_project, name="edit_project"),
     # END Tutorial 3
     # Tutorial 4
     path("register/", register, name="register"),

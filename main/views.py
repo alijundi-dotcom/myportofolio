@@ -212,8 +212,8 @@ def logout_user(request):
 # Membuat tombol Star
 # Tanpa cek is_superuser: semua akun yang sudah login boleh memberi star
 @login_required(login_url="/login/")
-def toggle_star(request, project_id):
-    project = get_object_or_404(Project, pk=project_id)
+def toggle_star(request, id):
+    project = get_object_or_404(Project, pk=id)
 
     if request.method == "POST":
         # Kalau akun ini sudah pernah memberi star, batalkan star-nya.

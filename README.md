@@ -64,3 +64,5 @@ Bagian 1 beres nambahin fitur login logout.
 Bagian 2 dan 3 beres, lumayan lama ngerjainnya
 Oh iya bagian yang opsional menarik sih, tapi nanti kukerjakan, mau istirahat dulu
 27/9/26: beres sampai di menambahkan fitur editor bagi user yang memiliki akses edit. sebelumlangkah ini juga membuat group editor di django administration agar beberapa user yang dikehendaki menjadi editor bisa melakukan edit musik atau project dalam website. Oh iya, malam ini juga aku baru ingat ternyata fitur edit musik sudah ada? aku tidak ingat kapan menambakan fitur tersebut. Mungkin saat selesai tutorial 4 dan sedikit utak-atik kode..
+
+Tadi pas kucek, ternyata ada yang kulupa bahwa tombol toggle star belum muncul. itu karena logika dalam projects.html salah. harusnya siapapun bisa star dan unstar suatu musik atau project

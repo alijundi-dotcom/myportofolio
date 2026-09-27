@@ -54,9 +54,19 @@
                                         <a href="{{project.project_url}}">Lihat Proyek</a>
                                     </p>
                                 {% endif %}
+                                <!-- TOGGLE STAR -->
+                                {% if user.is_authenticated %}
+                                     {% include "components/project_star.html" with project=project %}
+                                {% endif %}
+                                <!-- END TOGGLE STAR -->
+                                <!-- EDIT -->
+                                {% if is_owner or is_editor %}
+                                    <a href="{% url 'main:edit_project' project.id %}" class="button">Edit</a>
+                                {% endif %}
+                                <!-- END EDIT -->
                                 <!-- TOMBOL HAPUS -->
                                 {% if user.is_superuser %}  {# Tambahkan baris ini , Tutor 4#}
-                                    {% include "components/project_star.html" with project=project %}
+                              
                                     {% include "components/project_delete_modal.html" with project=project %}
                                 {% endif %}                 {# Tambahkan baris ini, TUtor 4 #}
                                 <!-- END TOMBOL HAPUS -->
