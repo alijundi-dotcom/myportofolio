@@ -34,13 +34,13 @@ urlpatterns = [
     path("projects/", show_projects, name="show_projects"),
     path("projects/add/", create_project, name="create_project"),
     path("api/projects/", get_projects_json, name="get_projects_json"),
-    path("projects/<uuid:project_id>/delete/",delete_project,name="delete_project"),
+    path("projects/<uuid:id>/delete/",delete_project,name="delete_project"),
     # END Tutorial 3
     # Tutorial 4
     path("register/", register, name="register"),
     path("login/", login_user, name="login"),
     path("logout/", logout_user, name="logout"),
-    path("projects/<uuid:project_id>/star/",toggle_star,name="toggle_star",),
+    path("projects/<uuid:id>/star/",toggle_star,name="toggle_star",),
 
     # END Tutorial 4
 ]

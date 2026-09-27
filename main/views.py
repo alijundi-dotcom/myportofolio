@@ -10,6 +10,7 @@ from django.core.exceptions import PermissionDenied        # Tambahkan baris ini
 
 from django.core import serializers
 from django.http import HttpResponse, JsonResponse
+from django.views.decorators.http import require_POST
 
 from main.models import Experience, Project, Musics
 from main.forms import ProjectForm, MusicForm
@@ -58,6 +59,9 @@ def create_music(request):
 
 # fitur edit musik 
 def edit_music(request, id):
+    if not (is_owner(request.user) or is_editor(request.user)):
+        raise PermissionDenied
+    
     music = get_object_or_404(Musics, pk=id)
     form = MusicForm(request.POST or None, instance=music)
     if request.method == "POST" and form.is_valid():
@@ -73,6 +77,8 @@ def edit_music(request, id):
 
 #fitur hapus musik -- delete
 def delete_music(request, id):
+    if not is_owner(request.user):
+        raise PermissionDenied
     music = get_object_or_404(Musics, pk=id)
     music.delete()
     return redirect("main:show_music")
@@ -110,6 +116,8 @@ def show_music(request):
     context = {
         "name": "Ali",
         "music_list": Musics.objects.all(),
+        "is_editor": is_editor(request.user),
+        "is_owner": is_owner(request.user),
 
     }
     return render(request, "musics.html", context)
@@ -129,6 +137,8 @@ def show_projects(request):
         "name": "Ali",
         "project_list": Project.objects.all(),
         "title_query": title_query,
+        "is_editor": is_editor(request.user),
+        "is_owner": is_owner(request.user),
     }   
     return render(request, "projects.html", context)
 
@@ -145,11 +155,11 @@ def get_projects_json(request):
     return HttpResponse(projects_json, content_type="application/json")
 
 @login_required(login_url="/login/") #lakukan hal yg sama dengan fungsi create_project
-def delete_project(request, project_id):
+def delete_project(request, id):
     if not request.user.is_superuser:
         raise PermissionDenied
 
-    project = get_object_or_404(Project, pk=project_id)
+    project = get_object_or_404(Project, pk=id)
 
     if request.method == "POST":
         project.delete()
@@ -216,3 +226,28 @@ def toggle_star(request, project_id):
     return redirect("main:show_projects")
 
 # End Tutorial 4
+def is_editor(user):
+    return user.is_authenticated and user.groups.filter(name="Editor").exists()
+
+def is_owner(user):
+    return user.is_authenticated and user.is_superuser
+
+@login_required(login_url='/login/')
+def edit_project(request, id):
+    if not(is_owner(request.user) or is_editor(request.user)):
+        raise PermissionDenied
+
+    project = get_object_or_404(Project, pk=id)
+    form = ProjectForm(request.POST or None, instance=project)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Project berhasil diedit!")
+        return redirect("main:show_projects")
+
+    context = {
+        "name": "Ali",
+        "form": form,
+        "project": project,
+    }
+    return render(request, "projects_form.html", context)

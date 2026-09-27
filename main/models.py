@@ -61,5 +61,8 @@ class Project(models.Model):
     starred_by = models.ManyToManyField(
         User, related_name="starred_projects", blank=True
     )
+    def total_stars(self):
+        return self.stars.count()
+
     def __str__(self):
         return self.title
