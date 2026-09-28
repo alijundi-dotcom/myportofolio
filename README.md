@@ -68,3 +68,5 @@ Oh iya bagian yang opsional menarik sih, tapi nanti kukerjakan, mau istirahat du
 Tadi pas kucek, ternyata ada yang kulupa bahwa tombol toggle star belum muncul. itu karena logika dalam projects.html salah. harusnya siapapun bisa star dan unstar suatu musik atau project
 
 Oke tambahan lagi, jadi membetulkan musics.html soalnya beberapa hal harusnya tidak di sana. Editor hanya boleh edit. Hanya admin yang bisa lakukan semuanya. User biasa hanya bisa lihat.
+
+28/9/26: beberapa tombol tampak hampir tidak terlihat di beberapa halaman seperti projects.html, login.html, dan register.html. Aku samakan semua tombol dengan tombol github, email, dan linkedin di halaman profile.
