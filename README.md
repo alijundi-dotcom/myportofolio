@@ -70,3 +70,6 @@ Tadi pas kucek, ternyata ada yang kulupa bahwa tombol toggle star belum muncul. 
 Oke tambahan lagi, jadi membetulkan musics.html soalnya beberapa hal harusnya tidak di sana. Editor hanya boleh edit. Hanya admin yang bisa lakukan semuanya. User biasa hanya bisa lihat.
 
 28/9/26: beberapa tombol tampak hampir tidak terlihat di beberapa halaman seperti projects.html, login.html, dan register.html. Aku samakan semua tombol dengan tombol github, email, dan linkedin di halaman profile.
+
+AI Disclosure untuk Tugas 4: Belum menerapkan strategi prompting yang begitu tepat. Aku pakai Gemini AI untuk membantu penyelesaian Tugas 4 dengan memahami kode, langkah-langkahnya, dan debug error.
+Chat: https://gemini.google.com/share/d/1y6hdCPbC2dOZHkyALvZrJpJzdNcEbyvQ?usp=sharing
