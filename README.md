@@ -75,3 +75,4 @@ AI Disclosure untuk Tugas 4: Belum menerapkan strategi prompting yang begitu tep
 Chat: https://gemini.google.com/share/d/1y6hdCPbC2dOZHkyALvZrJpJzdNcEbyvQ?usp=sharing
 
 29/9/26: Nambah dark mode
+Mulai Tutorial 5. Masuk ke materi javascript.
