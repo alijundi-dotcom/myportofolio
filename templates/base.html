@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -30,6 +30,11 @@
                 <a href="{% url 'main:register' %}">Register</a>
             {% endif %}
             <!--END tampilan login dan logout di navbar-->
+            <button
+                type="button"
+                data-theme-toggle
+                aria-label="Change to light theme"
+                >Change to light theme (or icon here)</button>
         </nav>
     </div>
   </header>
@@ -40,5 +45,52 @@
           <p>&copy; 2026 {{ name }}. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
       </div>
   </footer>
+  <script>
+        function calculateSettingAsThemeString({ localStorageTheme, systemSettingDark }) {
+            if (localStorageTheme !== null) {
+                return localStorageTheme;
+            }
+
+            if (systemSettingDark.matches) {
+                return "dark";
+            }
+
+            return "light";
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const localStorageTheme = localStorage.getItem("theme");
+            const systemSettingDark = window.matchMedia("(prefers-color-scheme: dark)");
+
+            let currentThemeSetting = calculateSettingAsThemeString({ localStorageTheme, systemSettingDark });
+
+            const button = document.querySelector("[data-theme-toggle]");
+            const htmlElement = document.querySelector("html");
+
+            function updateThemeUI(theme) {
+                htmlElement.setAttribute("data-theme", theme);
+                if (button) {
+                    const newCta = theme === "dark" ? "Change to light theme" : "Change to dark theme";
+                    button.innerText = newCta;
+                    button.setAttribute("aria-label", newCta);
+                }
+            }
+
+            updateThemeUI(currentThemeSetting);
+
+            if (button) {
+                button.addEventListener("click", () => {
+                    const newTheme = currentThemeSetting === "dark" ? "light" : "dark";
+
+                    // Simpan preferensi ke Local Storage
+                    localStorage.setItem("theme", newTheme);
+                    
+                    // Update tampilan & status memori
+                    currentThemeSetting = newTheme;
+                    updateThemeUI(newTheme);
+                });
+            }
+        });
+  </script>
 </body>
 </html>

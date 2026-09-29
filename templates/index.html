@@ -13,10 +13,20 @@
                 </div>
                 <div class="hero-photo">
                     <div class="photo-block">
-                        <img class="avatar" src="/static/img/burhan_exe.jpg" alt="Photo {{ name }}">
+                    <img id="muka-sendiri" 
+                        class="avatar" 
+                        src="/static/img/burhan_exe.jpg" 
+                        alt="Photo {{ name }}"
+                        onclick="toggleAvatar()"
+                        style="cursor:pointer">
 
                     </div>
-                    <img class="avatar" src="/static/img/ali_exe.jpg" alt="Photo of Burhan Aseli Pulau Nias">
+                    <img id="muka-sendiri" 
+                        class="avatar" 
+                        src="/static/img/ali_exe.jpg"
+                        alt="Photo of Burhan Aseli Pulau Nias"
+                        onclick="toggleAvatar()"
+                        style="cursor: pointer;">
                 </div>
                 <div class="hero-details">
                     <p class="bio">{{ bio }}</p>
@@ -48,12 +58,25 @@
             </div>
         </section>
     </main>
+    <script>
+        function toggleAvatar() {
+            const img = document.getElementById("muka-sendiri");
+            
+            // Cek gambar saat ini, lalu switch
+            if (img.getAttribute("src")===("static/img/static/img/burhan_exe.jpg")) {
+                img.setAttribute("src","/static/img/ali_exe.jpg");
+            } else {
+                img.setAttribute("src","/static/img/burhan_exe.jpg");
+            }
+        }
+    </script>
     {% endblock content %}
     <footer class="site-footer">
         <div class="container">
             <p>&copy; 2026 {{ name }}. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
         </div>
     </footer>
+    
     
 
 </body>

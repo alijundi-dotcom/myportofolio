@@ -73,3 +73,5 @@ Oke tambahan lagi, jadi membetulkan musics.html soalnya beberapa hal harusnya ti
 
 AI Disclosure untuk Tugas 4: Belum menerapkan strategi prompting yang begitu tepat. Aku pakai Gemini AI untuk membantu penyelesaian Tugas 4 dengan memahami kode, langkah-langkahnya, dan debug error.
 Chat: https://gemini.google.com/share/d/1y6hdCPbC2dOZHkyALvZrJpJzdNcEbyvQ?usp=sharing
+
+29/9/26: Nambah dark mode
