@@ -84,8 +84,25 @@ def delete_music(request, id):
     return redirect("main:show_music")
 
 def show_json_music(request):
-    data = Musics.objects.all()
-    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+    title_query = request.GET.get("title", "").strip()
+    musics = Musics.objects.all()
+
+    if title_query:
+        musics = musics.filter(title__icontains=title_query)
+
+    data = []
+    for music in musics:
+        data.append({
+            "pk": str(music.id),
+            "fields": {
+                "title": music.title,
+                "description": music.description,
+                "category": music.category,
+                "thumbnail": music.thumbnail
+                # Tambahkan field star/status user jika musik menggunakan star dari Tugas 4
+            }
+        })
+    return JsonResponse(data, safe=False)
 
 ### END TUGAS 3
 def show_main(request):
@@ -115,7 +132,7 @@ def show_experience(request):
 def show_music(request):
     context = {
         "name": "Ali",
-        "music_list": Musics.objects.all(),
+        "form": MusicForm(),
         "is_editor": is_editor(request.user),
         "is_owner": is_owner(request.user),
 
@@ -279,4 +296,21 @@ def create_project_ajax(request):
             status=201,
         )
 
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
+
+@login_required(login_url="/login/")
+@require_POST
+def create_music_ajax(request):
+    if not (request.user.is_superuser or is_owner(request.user) or is_editor(request.user)):
+        return JsonResponse(
+            {"message": "Hanya pemilik portofolio yang dapat menambahkan proyek."},
+            status=403,
+        )
+    form = MusicForm(request.POST)
+    if form.is_valid():
+        music = form.save()
+        return JsonResponse(
+            {"message": "Musik berhasil ditambahkan!", "pk": str(music.id)},
+            status=201
+        )
     return JsonResponse({"errors": form.errors.get_json_data()}, status=400)

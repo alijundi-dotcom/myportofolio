@@ -16,6 +16,13 @@ class MusicForm(ModelForm):
             "category",
             "thumbnail",
         ]
+    def clean_title(self):
+        title = self.cleaned_data.get("title")
+        return strip_tags(title)
+
+    def clean_description(self):
+        description = self.cleaned_data.get("description")
+        return strip_tags(description)
 # END Tugas 3
 
 # Di bawah ini dari Tutorial 3

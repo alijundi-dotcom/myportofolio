@@ -18,6 +18,7 @@ from main.views import (
     logout_user,
     toggle_star,
     create_project_ajax,
+    create_music_ajax,
     )
 
 app_name = "main"
@@ -30,7 +31,7 @@ urlpatterns = [
     path("musics/add", create_music, name="create_music"),
     path("musics/edit/<uuid:id>", edit_music, name="edit_music"),
     path("musics/delete/<uuid:id>", delete_music, name="delete_music"),
-    path("musics/json/", show_json_music, name="show_json_musico"),
+    path("musics/json/", show_json_music, name="show_json_music"),
     # END Tugas 3
     # Tutorial 3
     path("projects/", show_projects, name="show_projects"),
@@ -48,4 +49,5 @@ urlpatterns = [
     # END Tutorial 4
     #Tutor 5
     path("projects/add-ajax/", create_project_ajax, name="create_project_ajax"),
+    path("musics/add-ajax/", create_music_ajax, name="create_music_ajax"),
 ]
