@@ -76,3 +76,5 @@ Chat: https://gemini.google.com/share/d/1y6hdCPbC2dOZHkyALvZrJpJzdNcEbyvQ?usp=sh
 
 29/9/26: Nambah dark mode
 Mulai Tutorial 5. Masuk ke materi javascript.
+
+30/9/26: Beres Tutorial 5
