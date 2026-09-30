@@ -81,3 +81,5 @@ Mulai Tutorial 5. Masuk ke materi javascript.
 Cerita malem-malem aku ngabisin waktu banyak buat nampilin card di musics.html... Wah pusing parah.
 Chat sama AI: https://gemini.google.com/share/d/1ib0RcGqPEXFRUd47gLGwXfmbvqG5aW5z?usp=sharing
 AI digunakan untuk debugging sih kebanyakan di chat ini. Aku rasa kodenya benar, tapi ketika aku mau tambah musik, datanya tidak muncul terus. Bingung kan, jadinya nanya-nanya AI.
+
+Coba push pws
