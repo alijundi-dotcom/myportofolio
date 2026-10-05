@@ -100,3 +100,9 @@ Tanpa await: - baris kode berikutnya dieksekusi tanpa nunggu request server sele
 3. Serangan XSS yaitu ketika si hacker kasih input berbahaya seperti<script>alert('XSS')</script>.... input bahaya begitu bisa saja mencuri cookie, session token, atau webnya jadi berantakan
 
 Secara, django template punya pembersihan sendiri. Kalau AJAX, dia ngambil data raw JSON dari server, teks mentah. Misal di innerHTML ada music.title dan kalau tidak dibersihkan misal music title isinya ada tag script yang berbahaya, browsernya bakal eksekusi dan terjadilah serangan XSS. Makanya ada kita bikin escapeHtml.
+
+AI Disclosure untuk Tugas 5:
+chat: https://gemini.google.com/share/d/1NMX6E1xARzCYDvLO1W_gELXDYILLiRIM?usp=sharing
+
+Gemini kadang ngasih kode kepanjangan. Aku jadi mengerjakannya dua kali. Dia begitu buta kalau tidak diberi konteks yang lengkap. Dibuat muter-muter aku sama kode yang dia kasih. Misal aku hanya tanya kenapa ini tidak bisa muncul music card setelah perubahan, 2-3 chat baru dia kasih jawaban yang bener.. hadeuhhh
+Lebih terpakai buat debugging sih ya Gemini ini. walaupun kadang error jawaban dia. Alhasil tetep debug sendiri bagian yang salah.
