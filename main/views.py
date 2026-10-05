@@ -76,6 +76,7 @@ def edit_music(request, id):
     return render(request, "edit_music.html", context)
 
 #fitur hapus musik -- delete
+@require_POST
 def delete_music(request, id):
     if not is_owner(request.user):
         raise PermissionDenied
@@ -103,6 +104,17 @@ def show_json_music(request):
             }
         })
     return JsonResponse(data, safe=False)
+
+@login_required
+@require_POST
+def delete_music_ajax(request, id):
+    if not request.user.is_superuser:
+        return JsonResponse({'message': 'Kamu tidak memiliki izin untuk menghapus musik ini.'}, status=403)
+    
+    music = get_object_or_404(Musics, pk=id)
+    music.delete()
+    
+    return JsonResponse({'message': 'Musik berhasil dihapus!'}, status=200)
 
 ### END TUGAS 3
 def show_main(request):
@@ -303,7 +315,7 @@ def create_project_ajax(request):
 def create_music_ajax(request):
     if not (request.user.is_superuser or is_owner(request.user) or is_editor(request.user)):
         return JsonResponse(
-            {"message": "Hanya pemilik portofolio yang dapat menambahkan proyek."},
+            {"message": "Hanya pemilik portofolio yang dapat menambahkan musik."},
             status=403,
         )
     form = MusicForm(request.POST)

@@ -19,6 +19,7 @@ from main.views import (
     toggle_star,
     create_project_ajax,
     create_music_ajax,
+    delete_music_ajax,
     )
 
 app_name = "main"
@@ -30,7 +31,7 @@ urlpatterns = [
     #Tugas 3
     path("musics/add", create_music, name="create_music"),
     path("musics/edit/<uuid:id>", edit_music, name="edit_music"),
-    path("musics/delete/<uuid:id>", delete_music, name="delete_music"),
+    path("musics/delete/<uuid:id>", delete_music_ajax, name="delete_music_ajax"),
     path("musics/json/", show_json_music, name="show_json_music"),
     # END Tugas 3
     # Tutorial 3

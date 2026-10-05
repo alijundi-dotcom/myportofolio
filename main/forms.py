@@ -18,11 +18,11 @@ class MusicForm(ModelForm):
         ]
     def clean_title(self):
         title = self.cleaned_data.get("title")
-        return strip_tags(title)
+        return strip_tags(title) if title else ""
 
     def clean_description(self):
         description = self.cleaned_data.get("description")
-        return strip_tags(description)
+        return strip_tags(description) if description else ""
 # END Tugas 3
 
 # Di bawah ini dari Tutorial 3

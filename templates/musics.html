@@ -25,6 +25,8 @@
 {% include "components/music_form_modal.html" %}
 
 <script>
+    const DELETE_MUSIC_ENDPOINT = "{% url 'main:delete_music_ajax' '00000000-0000-0000-0000-000000000000' %}";
+    const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
     const GET_MUSIC_ENDPOINT = "{% url 'main:show_json_music' %}";
     const CREATE_MUSIC_ENDPOINT = "{% url 'main:create_music_ajax' %}";
 
@@ -54,6 +56,7 @@
 
     async function fetchMusics() {
         const gridContainer = document.getElementById('music-grid');
+        if (!gridContainer) return;
         try {
             const response = await fetch(GET_MUSIC_ENDPOINT);
             if (!response.ok) return;
@@ -66,24 +69,77 @@
             }
 
             data.forEach(item => {
-                const music = item.fields || item;
+                const music = item.fields ? item.fields : item;
+                const musicId = item.pk || music.id || item.id;
+
                 const card = document.createElement('article');
                 card.className = 'experience-card';
 
-                const linkHtml = music.thumbnail 
-                    ? `<p style="margin-top:10px;"><a href="${escapeHtml(music.thumbnail)}" target="_blank" class="button">Dengar Musik</a></p>`
+                
+                const titleEscaped = escapeHtml(music.title || '');
+                const categoryEscaped = escapeHtml(music.category || 'MUSIC');
+                const descriptionEscaped = escapeHtml(music.description || '');
+                const thumbnailEscaped = escapeHtml(music.thumbnail || '');
+                const linkHtml = thumbnailEscaped 
+                    ? `<a href="${thumbnailEscaped}" target="_blank" class="button">Dengar Musik</a>`
                     : '';
+
+                const deleteUrl = "{% url 'main:delete_music_ajax' '00000000-0000-0000-0000-000000000000' %}"
+                    .replace('00000000-0000-0000-0000-000000000000', musicId);
+
+                const deleteHtml = IS_SUPERUSER 
+                    ? `<button type="button" class="button button-danger" onclick="deleteMusic('${musicId}')">Hapus</button>`
+                    : '';
+                    
 
                 card.innerHTML = `
                     <h2>${escapeHtml(music.title)}</h2>
                     <span class="experience-category">${escapeHtml(music.category || 'Music')}</span>
                     <p class="experience-description">${escapeHtml(music.description || '')}</p>
-                    ${linkHtml}
+                    <div class="project-card-actions" style="margin-top: 15px;">
+                        <div class="project-actions" style="display: flex; gap: 10px; align-items: center;">
+                            ${linkHtml}
+                            ${deleteHtml}
+                        </div>
+                    </div>
                 `;
                 gridContainer.appendChild(card);
             });
         } catch (err) {
             console.error('Error fetching musics:', err);
+        }
+    }
+    async function deleteMusic(musicId) {
+        if (!confirm('Apakah kamu yakin ingin menghapus musik ini?')) return;
+
+        // Ganti dummy ID dengan ID musik yang sebenarnya
+        const deleteUrl = DELETE_MUSIC_ENDPOINT.replace('00000000-0000-0000-0000-000000000000', musicId);
+
+        try {
+            const response = await fetch(deleteUrl, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+            });
+
+            const result = await response.json().catch(() => ({}));
+
+            if (response.ok) {
+                if (typeof showToast == 'function') {
+                    showToast('Berhasil', result.message || 'Musik berhasil dihapus!', 'success');
+                }
+                fetchMusics(); // Refresh grid musik setelah berhasil dihapus
+            } else {
+                if (typeof showToast === 'function') {
+                    showToast('Gagal', result.message || 'Gagal menghapus musik.', 'error');
+                }
+            }
+        } catch (error) {
+            console.error('Error deleting music:', error);
+            if(typeof showToast == 'function'){
+                showToast('Error', 'Tidak dapat terhubung ke server.', 'error');
+            }
         }
     }
 
@@ -99,6 +155,8 @@
         event.preventDefault(); // Mencegah reload halaman standar!
 
         const musicForm = document.getElementById('music-form');
+        if (!musicForm) return;
+
         const submitButton = musicForm.querySelector('button[type="submit"]');
         if (submitButton) submitButton.disabled = true;
 
@@ -115,13 +173,25 @@
                 musicForm.reset();
                 closeMusicModal();
                 fetchMusics();
-                alert(result.message || 'Musik berhasil ditambahkan!');
+                showToast('Berhasil', result.message || 'Musik baru berhasil ditambahkan!', 'success');
+
             } else {
-                alert('Gagal menambahkan musik: ' + JSON.stringify(result.errors || result.message));
+                let errorMessage = 'Gagal menambahkan musik.';
+                if (result.errors) {
+                    const messages = Object.values(result.errors).flat().map(err => err.message || err);
+                    errorMessage = messages.join(' ');
+                } else if (result.message) {
+                    errorMessage = result.message;
+                }
+                if (typeof showToast === 'function') {
+                    showToast('Gagal', errorMessage, 'error');
+                }
             }
         } catch (error) {
             console.error('Error adding music:', error);
-            alert('Tidak dapat terhubung ke server.');
+            if(typeof showToast == 'function'){
+                showToast('Error', 'Tidak dapat terhubung ke server. Silakan coba lagi.', 'error');
+            }
         } finally {
             if (submitButton) submitButton.disabled = false;
         }
