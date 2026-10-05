@@ -106,3 +106,6 @@ chat: https://gemini.google.com/share/d/1NMX6E1xARzCYDvLO1W_gELXDYILLiRIM?usp=sh
 
 Gemini kadang ngasih kode kepanjangan. Aku jadi mengerjakannya dua kali. Dia begitu buta kalau tidak diberi konteks yang lengkap. Dibuat muter-muter aku sama kode yang dia kasih. Misal aku hanya tanya kenapa ini tidak bisa muncul music card setelah perubahan, 2-3 chat baru dia kasih jawaban yang bener.. hadeuhhh
 Lebih terpakai buat debugging sih ya Gemini ini. walaupun kadang error jawaban dia. Alhasil tetep debug sendiri bagian yang salah.
+
+Oke itu soal AI disclosure saya..
+Oh iya satu hal lagi yang lupa. Aku baru pakai commit git conventional sejak 4/10/26. Maaf, aku terlalu bersemangat untuk menyelesaikan Tutorial dan Tugasnya
