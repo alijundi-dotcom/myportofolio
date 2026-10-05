@@ -83,3 +83,20 @@ Chat sama AI: https://gemini.google.com/share/d/1ib0RcGqPEXFRUd47gLGwXfmbvqG5aW5
 AI digunakan untuk debugging sih kebanyakan di chat ini. Aku rasa kodenya benar, tapi ketika aku mau tambah musik, datanya tidak muncul terus. Bingung kan, jadinya nanya-nanya AI.
 
 Coba push pws
+
+5/10/26: kemaren hari Ahad aslinya fix styling dark mode di beberapa halaman. lupa ketulis
+
+
+### Tugas 5
+
+1. Debouncing == teknik menunda eksekusi suatu fungsi hingga waktu tertentu tanpa adanya event baru. 
+Pentingnya: - mencegah overload server
+            - Menghemat sumber daya
+            - mencegah race condition
+2. Await digunakan untuk menghentikan kode sampai Promise dari fetch() selesai diproses dan mengembalikan objek Response secara nyata
+Tanpa await: - baris kode berikutnya dieksekusi tanpa nunggu request server selesai
+             - Variabel penampung respons isinya bukan data JSOn atau Response, tapi objek Promise <pending>
+             - Kalau mengakses method response.json() atau response.ok secara langsung nanti TypeError atau undefined
+3. Serangan XSS yaitu ketika si hacker kasih input berbahaya seperti<script>alert('XSS')</script>.... input bahaya begitu bisa saja mencuri cookie, session token, atau webnya jadi berantakan
+
+Secara, django template punya pembersihan sendiri. Kalau AJAX, dia ngambil data raw JSON dari server, teks mentah. Misal di innerHTML ada music.title dan kalau tidak dibersihkan misal music title isinya ada tag script yang berbahaya, browsernya bakal eksekusi dan terjadilah serangan XSS. Makanya ada kita bikin escapeHtml.
