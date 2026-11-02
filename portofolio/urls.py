@@ -25,6 +25,8 @@ from portofolio.views import exp_page
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("main.urls")),
+    path("api/v1/", include("main.api_urls")),
+    path("api-auth/", include("rest_framework.urls")),
     path('', landing_page, name ='index'),
     path('burhan/',burhan_page, name="burhan"),
     path('skills/', skills_page, name= 'skills' ),
