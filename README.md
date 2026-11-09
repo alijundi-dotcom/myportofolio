@@ -166,3 +166,14 @@ Untuk menguji apakah CSRF benar aktif, pengujian harus mensimulasikan alur auten
 
 ## Beberapa catatan terkait Tugas 6
 beberapa commit ada yang aku salah tulis, harusnya Tugas 6 tapi malah kutulis Tugas 7. Aku terlalu muscle memory, kuanggep Tugas 7 itu karena sebelumnya tutorial 7 kan, makanya aku malah kebablasan tulis Tugas 7
+## AI Discolusure
+Alat AI: Gemini
+Chat: https://gemini.google.com/share/d/1yiQs5UyYcmkmOCOZ4tVxJ4sphzZkYP6h?usp=sharing
+Peran: AI digunakan sebagai alat bantu dan papan pemantul ide dalam pengerjaan Tugas 6. 
+Membantu memahami dan merancang struktur awal ModelSerializer pada main/serializers.py
+Mengembangkan acuan fungsi API view berbasi @api_view dengan SessionAuthentication untuk method GET,POST,PUT,PATCH, DELETE
+Merancang skenario unit test berbasis APITestCase dan APIClient untuk menguji hak akses 4 peran serta penolakan token CSRF
+
+Keterbatasan: Kurang Proteksi HTTP mentod pada aksi destruktif. AI cenderung bikin handler hapus data tanpa pengetatan method HTTP seperti @requie_POST atau @api_view(['DELETE']), berpotensi memunculkan celah kemananan.
+
+AI juga harus dikasih konteks yang jelas agar debugging menjadi benar. Contohnya aku minta berapa kali debug ternyata ada file yang belum kumasukkan dan salahnya di situ(dan karena typo). Jadi debug sendiri
