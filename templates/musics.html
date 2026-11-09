@@ -12,7 +12,7 @@
 
             <!-- Tombol Tambah Musik -->
             {% if user.is_superuser %}
-                <button type="button" class="button" popovertarget="add-music-modal">
+                <button type="button" class="button" onclick="openAddModal()">
                     + Tambah Musik
                 </button>
             {% endif %}
@@ -48,14 +48,15 @@
 </main>
 
 <!-- INCLUDE MODAL SEBELUM SCRIPT KODE JS -->
- {% if user.is_superuser %}
+ {% if user.is_superuser or user.groups.all.0.name == "Editor" %}
         {% include "components/music_form_modal.html" %}
 {% endif %}
+{% csrf_token %}
 
 <script>
-    const BASE_PROJECTS_ENDPOINT = "{% url 'api:music-list' %}"
-    const DETAIL_PROJECT_ENDPOINT = "{% url 'api:music-detail' '00000000-0000-0000-0000-000000000000' %}";
-    const STAR_PROJECT_ENDPOINT = "{% url 'api:music-star' '00000000-0000-0000-0000-000000000000' %}";
+    const BASE_MUSICS_ENDPOINT = "{% url 'api:music-list' %}"
+    const DETAIL_MUSIC_ENDPOINT = "{% url 'api:music-detail' '00000000-0000-0000-0000-000000000000' %}";
+    const STAR_MUSIC_ENDPOINT = "{% url 'api:music-star' '00000000-0000-0000-0000-000000000000' %}";
 
     const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
     const IS_AUTHENTICATED = "{{ user.is_authenticated|yesno:'true,false' }}" === "true";
@@ -64,16 +65,13 @@
     const loadingState = document.getElementById('loading');
     const errorState = document.getElementById('error');
     const emptyState = document.getElementById('empty');
-    const gridContainer = document.getElementById('grid');
-    const searchForm = document.getElementById('project-search-form');
+    const gridContainer = document.getElementById('music-grid');
+    const searchForm = document.getElementById('music-search-form');
     const searchInput = document.getElementById('search-input');
-    const projectForm = document.getElementById('project-form');
+    const musicForm = document.getElementById('music-form');
     let musicsAbortController;
     let searchDebounceTimer;
     let currentEditId = null;
-
-    const GET_MUSIC_ENDPOINT = "{% url 'main:show_json_music' %}";
-    const CREATE_MUSIC_ENDPOINT = "{% url 'main:create_music_ajax' %}";
 
     function escapeHtml(value) {
         return String(value ?? '')
@@ -85,7 +83,7 @@
     }
 
     function getCookie(name) {
-        const prefix = `${name}`;
+        const prefix = `${name}=`;
         const cookie = document.cookie.split(';').map(value => value.trim())
             .find(value => value.startsWith(prefix));
             return cookie ? decodeURIComponent(cookie.slice(prefix.length)) : null;
@@ -93,159 +91,177 @@
     function musicEndpoint(pattern, id){
         return pattern.replace('00000000-0000-0000-0000-000000000000', id);
     }
-    async function fetchMusics() {
-        const gridContainer = document.getElementById('music-grid');
-        if (!gridContainer) return;
-        try {
-            const response = await fetch(GET_MUSIC_ENDPOINT);
-            if (!response.ok) return;
-            const data = await response.json();
 
-            gridContainer.innerHTML = '';
-            if (data.length === 0) {
-                gridContainer.innerHTML = '<p>Belum ada musik.</p>';
-                return;
-            }
-
-            data.forEach(item => {
-                const music = item.fields ? item.fields : item;
-                const musicId = item.pk || music.id || item.id;
-
-                const card = document.createElement('article');
-                card.className = 'experience-card';
-
-                
-                const titleEscaped = escapeHtml(music.title || '');
-                const categoryEscaped = escapeHtml(music.category || 'MUSIC');
-                const descriptionEscaped = escapeHtml(music.description || '');
-                const thumbnailEscaped = escapeHtml(music.thumbnail || '');
-                const linkHtml = thumbnailEscaped 
-                    ? `<a href="${thumbnailEscaped}" target="_blank" class="button">Dengar Musik</a>`
-                    : '';
-
-                const deleteUrl = "{% url 'main:delete_music_ajax' '00000000-0000-0000-0000-000000000000' %}"
-                    .replace('00000000-0000-0000-0000-000000000000', musicId);
-
-                const deleteHtml = IS_SUPERUSER 
-                    ? `<button type="button" class="button button-danger" onclick="deleteMusic('${musicId}')">Hapus</button>`
-                    : '';
-                    
-
-                card.innerHTML = `
-                    <h2>${escapeHtml(music.title)}</h2>
-                    <span class="experience-category">${escapeHtml(music.category || 'Music')}</span>
-                    <p class="experience-description">${escapeHtml(music.description || '')}</p>
-                    <div class="project-card-actions" style="margin-top: 15px;">
-                        <div class="project-actions" style="display: flex; gap: 10px; align-items: center;">
-                            ${linkHtml}
-                            ${deleteHtml}
-                        </div>
-                    </div>
-                `;
-                gridContainer.appendChild(card);
-            });
-        } catch (err) {
-            console.error('Error fetching musics:', err);
-        }
+    function displayPageSection({showLoading = false, showError = false,
+        showEmpty = false, showGrid = false}){
+        loadingState.classList.toggle('hide', !showLoading);
+        errorState.classList.toggle('hide', !showError);
+        emptyState.classList.toggle('hide', !showEmpty);
+        gridContainer.classList.toggle('hide', !showGrid);
     }
-    async function deleteMusic(musicId) {
-        if (!confirm('Apakah kamu yakin ingin menghapus musik ini?')) return;
-
-        // Ganti dummy ID dengan ID musik yang sebenarnya
-        const deleteUrl = DELETE_MUSIC_ENDPOINT.replace('00000000-0000-0000-0000-000000000000', musicId);
-
-        try {
-            const response = await fetch(deleteUrl, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken'),
-                },
-            });
-
-            const result = await response.json().catch(() => ({}));
-
-            if (response.ok) {
-                if (typeof showToast == 'function') {
-                    showToast('Berhasil', result.message || 'Musik berhasil dihapus!', 'success');
-                }
-                fetchMusics(); // Refresh grid musik setelah berhasil dihapus
-            } else {
-                if (typeof showToast === 'function') {
-                    showToast('Gagal', result.message || 'Gagal menghapus musik.', 'error');
-                }
-            }
-        } catch (error) {
-            console.error('Error deleting music:', error);
-            if(typeof showToast == 'function'){
-                showToast('Error', 'Tidak dapat terhubung ke server.', 'error');
-            }
-        }
+    
+    function buildMusicCardElement(music){
+        const article = document.createElement('article');
+        article.className = 'experience-card';
+        const image = music.thumbnail
+            ? `<img src="${escapeHtml(music.thumbnail)}" alt="${escapeHtml(music.title)}" class="project-image">` : '';
+        const editBtn = IS_EDITOR
+            ? `<button type="button" class="button button-secondary" data-action="edit"
+                data-id="${escapeHtml(music.id)}"
+                data-title="${escapeHtml(music.title)}"
+                data-category="${escapeHtml(music.category)}"
+                data-description="${escapeHtml(music.description)}"
+                data-thumbnail="${escapeHtml(music.thumbnail)}">Edit</button>` : '';
+            
+        const star = IS_AUTHENTICATED
+            ? `<button type="button" class="button button-secondary${music.is_starred ? ' is-starred' : ''}"
+                data-action="star" data-id="${escapeHtml(music.id)}"
+                title="${escapeHtml(music.starred_by_names)}">
+                ${music.is_starred ? 'Unstar' : 'Star'} (${music.star_count})</button>`
+                : `<a href="{% url 'main:login' %}" class="button">Login to star (${music.star_count})</a>`;
+        const removeBtn = IS_SUPERUSER
+            ? `<button type="button" class="button button-danger" data-action="delete"
+                data-id="${escapeHtml(music.id)}">Deleter</button>`: '';
+        const link = music.thumbnail
+            ? `<a href="${escapeHtml(music.thumbnail)}" target="_blank" class="button">Dengar</a>` : '';
+        article.innerHTML = `${image}<h2>${escapeHtml(music.title)}</h2>
+            <span class="experience-category">${escapeHtml(music.category)}</span>
+            <p class="experience-description">${escapeHtml(music.description)}</p>
+            <div class="project-card-actions"><div class="project-actions" style="display:flex; gap:8px; flex-wrap:wrap;" >
+            ${link}${star}${editBtn}${removeBtn}</div></div>`
+        return article;
     }
 
+    async function fetchMusics( searchQuery = '') {
+        if (musicsAbortController) musicsAbortController.abort();
+        musicsAbortController = new AbortController();
+        try {
+            displayPageSection({showLoading:true});
+            const url = new URL(BASE_MUSICS_ENDPOINT, window.location.origin);
+            if(searchQuery) url.searchParams.set('title', searchQuery);
+            const response = await fetch(url, {
+                headers: { Accept: 'application/json'},
+                signal: musicsAbortController.signal,
+            });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const musics = await response.json();
+            gridContainer.replaceChildren(...musics.map(buildMusicCardElement));
+            displayPageSection({showGrid: musics.length > 0, showEmpty: musics.length === 0});
+        } catch (error){
+            if (error.name === 'AbortError') return;
+            console.error(error);
+            displayPageSection({showError:true});
+        }
+    }
+    function apiErrorMessage(data, status){
+        const messages = Object.values(data).flat().filter(value => typeof value === "string");
+        return messages.join(' ') || `Request failed (HTTP ${status}).`;
+    }
+    async function writeMusic(url, method, payload) {
+        const response = await fetch(url, {
+            method,
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: payload === undefined ? undefined : JSON.stringify(payload),
+        });
+        if (response.status === 204) return null;
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(apiErrorMessage(data, response.status));
+        return data;
+    }
+
+    function openAddModal(){
+        currentEditId = null;
+        const modalTitle = document.getElementById('modal-title');
+        if(modalTitle) modalTitle.innerText = "Tambah Musik";
+        if(musicForm) musicForm.reset();
+        const modal = document.getElementById('add-music-modal');
+        if(modal && typeof modal.showPopover === 'function') modal.showPopover();
+    }
     function closeMusicModal() {
         const modal = document.getElementById("add-music-modal");
         if (modal && typeof modal.hidePopover === 'function') {
             modal.hidePopover();
         }
     }
-
-    // FUNGSI UTAMA AJAX SUBMIT (Sama seperti addProject di projects.html)
-    async function addMusic(event) {
-        event.preventDefault(); // Mencegah reload halaman standar!
-
-        const musicForm = document.getElementById('music-form');
-        if (!musicForm) return;
-
-        const submitButton = musicForm.querySelector('button[type="submit"]');
-        if (submitButton) submitButton.disabled = true;
-
+    async function saveMusic(event){
+        event.preventDefault();
+        const button = musicForm.querySelector('button[type="submit"]');
+        button.disabled = true;
         try {
-            const response = await fetch(CREATE_MUSIC_ENDPOINT, {
-                method: 'POST',
-                headers: { 'X-CSRFToken': getCookie('csrftoken') },
-                body: new FormData(musicForm),
-            });
+            const fields = new FormData(musicForm);
+            const payload = Object.fromEntries([
+                'title', 'category', 'description', 'thumbnail'
+            ].map(name => [name, fields.get(name)]));
 
-            const result = await response.json().catch(() => ({}));
+            const isEdit = Boolean(currentEditId);
+            const url = isEdit ? musicEndpoint(DETAIL_MUSIC_ENDPOINT, currentEditId) : BASE_MUSICS_ENDPOINT;
+            const method = isEdit ? 'PATCH' : 'POST';
 
-            if (response.ok) {
-                musicForm.reset();
-                closeMusicModal();
-                fetchMusics();
-                showToast('Berhasil', result.message || 'Musik baru berhasil ditambahkan!', 'success');
-
-            } else {
-                let errorMessage = 'Gagal menambahkan musik.';
-                if (result.errors) {
-                    const messages = Object.values(result.errors).flat().map(err => err.message || err);
-                    errorMessage = messages.join(' ');
-                } else if (result.message) {
-                    errorMessage = result.message;
-                }
-                if (typeof showToast === 'function') {
-                    showToast('Gagal', errorMessage, 'error');
-                }
-            }
-        } catch (error) {
-            console.error('Error adding music:', error);
-            if(typeof showToast == 'function'){
-                showToast('Error', 'Tidak dapat terhubung ke server. Silakan coba lagi.', 'error');
-            }
+            await writeMusic(url, method, payload);
+            musicForm.reset();
+            closeMusicModal();
+            showToast('Sukses', isEdit ? 'Musik berhasil diubah.' : 'Musik berhasil ditambahkan.', 'success');
+            await fetchMusics(searchInput.value.trim());
+        } catch (error){
+            showToast('gagal menyimpan musik', error.message, 'error');
         } finally {
-            if (submitButton) submitButton.disabled = false;
+            button.disabled = false;
         }
-    }
 
-    // Pasang Event Listener saat DOM Siap
-    document.addEventListener('DOMContentLoaded', () => {
-        const musicForm = document.getElementById('music-form');
-        if (musicForm) {
-            musicForm.addEventListener('submit', addMusic);
-        } else {
-            console.error("Form dengan id 'music-form' tidak ditemukan!");
+    }
+    if (musicForm) musicForm.addEventListener('submit', saveMusic);
+    gridContainer.addEventListener('click', async function (event) {
+        const button = event.target.closest('button[data-action]');
+        if (!button || button.disabled) return;
+        const action = button.dataset.action;
+
+        if (action === "edit"){
+            currentEditId = button.dataset.id;
+            
+            const titleInput = musicForm.querySelector('[name="title"]');
+            const categoryInput = musicForm.querySelector('[name="category"]');
+            const descInput = musicForm.querySelector('[name="description"]');
+            const thumbInput = musicForm.querySelector('[name="thumbnail"]');
+
+            if (titleInput) titleInput.value = button.dataset.title;
+            if (categoryInput) categoryInput.value = button.dataset.category;
+            if (descInput) descInput.value = button.dataset.description;
+            if (thumbInput) thumbInput.value = button.dataset.thumbnail;
+
+            const modal = document.getElementById('add-music-modal');
+            if (modal && typeof modal.showPopover === 'function') modal.showPopover();
+            return;
+        }
+        if (action === "delete" && !window.confirm('Apakah Anda yakin ingin menghapus musik ini?')) return;
+
+        button.disabled = true;
+        try {
+            const pattern =  action === 'star' ? STAR_MUSIC_ENDPOINT : DETAIL_MUSIC_ENDPOINT;
+            await writeMusic(musicEndpoint(pattern, button.dataset.id), action === 'star' ? 'POST' : 'DELETE');
+            showToast('Sukses', action === 'star' ? 'Status star diperbarui.' : 'Musik berhasil dihapus.', 'success');
+            await fetchMusics(searchInput.value.trim()); 
+        } catch (error){
+            showToast('Gagal', error.message, 'error');
+        } finally {
+            button.disabled = false;
         }
         
-        fetchMusics();
     });
+    searchInput.addEventListener('input', function(){
+        clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = setTimeout(() => fetchMusics(searchInput.value.trim()), 300);
+    });
+
+    searchForm.addEventListener('submit', function(event){
+        event.preventDefault();
+        clearTimeout(searchDebounceTimer);
+        fetchMusics(searchInput.value.trim());
+    });
+
+    fetchMusics(searchInput.value.trim());
 </script>
 {% endblock content %}

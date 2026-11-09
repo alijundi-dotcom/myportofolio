@@ -69,7 +69,7 @@ class MusicSerializer(serializers.ModelSerializer):
         return obj.starred_by.count()
 
     def get_is_starred(self, obj):
-        request = self.context.ge("request")
+        request = self.context.get("request")
         if request is None or not request.user.is_authenticated:
             return False
         return request.user in obj.starred_by.all()

@@ -75,26 +75,28 @@ def music_list(request):
         if title:
             musics = musics.filter(title__icontains=title)
         serializer = MusicSerializer(musics, many=True, context={"request": request})
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data)
+    serializer = MusicSerializer(data=request.data, context={"request": request})
+    serializer.is_valid(raise_exception=True) #untuk POST
+    serializer.save()
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 @api_view(["GET", "HEAD", "PUT", "PATCH", "DELETE"])
 @authentication_classes([SessionAuthentication])
 @permission_classes([IsPortfolioOwnerOrEditorOrReadOnly])
 def music_detail(request, music_id):
-    project = get_object_or_404(
+    music = get_object_or_404(
     Musics.objects.prefetch_related("starred_by"), pk=music_id,
     )
     if request.method in ("GET", "HEAD"):
         serializer = MusicSerializer(project, context={"request": request})
         return Response(serializer.data)
     if request.method == "DELETE":
-        project.delete()
+        music.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    serializer = ProjectSerializer(
-        project, data=request.data, partial=request.method == "PATCH",
+    serializer = MusicSerializer(
+        music, data=request.data, partial=request.method == "PATCH",
         context={"request": request},
     )
 
@@ -106,7 +108,7 @@ def music_detail(request, music_id):
 @authentication_classes([SessionAuthentication])
 @permission_classes([IsAuthenticated])
 def music_star(request, music_id):
-    music = get_object_or_404(Project, pk=music_id)
+    music = get_object_or_404(Musics, pk=music_id)
     if music.starred_by.filter(pk=request.user.pk).exists():
         music.starred_by.remove(request.user)
     else:
