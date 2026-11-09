@@ -136,3 +136,89 @@ class ProjectAPITest(APITestCase):
             self.list_url, self.payload, format="json", HTTP_X_CSRFTOKEN=token,
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+# main/tests_api.py
+import uuid
+from django.contrib.auth.models import Group, User
+from django.urls import reverse
+from rest_framework import status
+from rest_framework.test import APIClient, APITestCase
+from main.models import Musics
+
+class MusicAPITest(APITestCase):
+    def setUp(self):
+        self.owner = User.objects.create_superuser(
+            username="owner", password="test-password", email="owner@example.com"
+        )
+        self.editor_user = User.objects.create_user(
+            username="editor", password="test-password"
+        )
+        editor_group, _ = Group.objects.get_or_create(name="Editor")
+        self.editor_user.groups.add(editor_group)
+
+        self.regular_user = User.objects.create_user(
+            username="regular", password="test-password"
+        )
+        
+        self.music = Musics.objects.create(
+            title="Lagu Keren", description="Deskripsi lagu", category="keren"
+        )
+        self.list_url = reverse("api:music-list")
+        self.detail_url = reverse("api:music-detail", args=[self.music.id])
+        self.star_url = reverse("api:music-star", args=[self.music.id])
+        
+        self.payload = {
+            "title": "Lagu Baru",
+            "description": "Musik baru",
+            "category": "semangat",
+            "thumbnail": "https://example.com/thumb.jpg",
+        }
+
+    def test_public_and_regular_user_read_only(self):
+        # Pengunjung & User Biasa ditolak saat POST/DELETE
+        for user in [None, self.regular_user]:
+            if user:
+                self.client.force_authenticate(user=user)
+            self.assertEqual(self.client.post(self.list_url, self.payload).status_code, status.HTTP_403_FORBIDDEN)
+            self.assertEqual(self.client.delete(self.detail_url).status_code, status.HTTP_403_FORBIDDEN)
+        
+        # Pastikan database tidak berubah saat penolakan
+        self.assertEqual(Musics.objects.count(), 1)
+
+    def test_editor_permissions(self):
+        # Editor bisa PATCH tetapi ditolak saat POST & DELETE
+        self.client.force_authenticate(user=self.editor_user)
+        
+        response_post = self.client.post(self.list_url, self.payload)
+        self.assertEqual(response_post.status_code, status.HTTP_403_FORBIDDEN)
+
+        response_patch = self.client.patch(self.detail_url, {"title": "Judul Ditingkatkan"})
+        self.assertEqual(response_patch.status_code, status.HTTP_200_OK)
+
+        response_delete = self.client.delete(self.detail_url)
+        self.assertEqual(response_delete.status_code, status.HTTP_403_FORBIDDEN)
+
+        # Verifikasi isi DB
+        self.music.refresh_from_db()
+        self.assertEqual(self.music.title, "Judul Ditingkatkan")
+        self.assertEqual(Musics.objects.count(), 1)
+
+    def test_owner_can_create_and_delete(self):
+        self.client.force_authenticate(user=self.owner)
+        
+        response_create = self.client.post(self.list_url, self.payload)
+        self.assertEqual(response_create.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Musics.objects.count(), 2)
+
+        response_delete = self.client.delete(self.detail_url)
+        self.assertEqual(response_delete.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Musics.objects.count(), 1)
+
+    def test_csrf_token_enforcement(self):
+        # Test dengan APIClient(enforce_csrf_checks=True)
+        client = APIClient(enforce_csrf_checks=True)
+        client.login(username="owner", password="test-password")
+
+        # POST tanpa token CSRF harus ditolak 403
+        response = client.post(self.list_url, self.payload, format="json")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
