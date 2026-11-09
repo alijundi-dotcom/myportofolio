@@ -109,3 +109,58 @@ Lebih terpakai buat debugging sih ya Gemini ini. walaupun kadang error jawaban d
 
 Oke itu soal AI disclosure saya..
 Oh iya satu hal lagi yang lupa. Aku baru pakai commit git conventional sejak 4/10/26. Maaf, aku terlalu bersemangat untuk menyelesaikan Tutorial dan Tugasnya
+
+### Tugas 6
+1. REST adalah rancangan komunikasi sistem berbasis web yang menggunakan protokol HTTP secara konvensional seperti client-server, stateless, cacheable, dan uniform interface
+
+Mengmbalikan data dalam format JSON saja belum  cukup untuk membuat sebuah API disebut RESTful. JSON hanya bentuk representasi data(payload). Sebuah API  baru dapat dikategorikan Restful jika memenuhi prinsip-prinsip utama REST yang teridir dari Resoursce-Based Endpoints, HTTP Verbs Semantics, Penggunaan HTTP Status Code yang benar, Stateless ness dan Hypermedia As The Engine Of Application State
+
+Perbedaan Put & PATCH
+Pembaruan
+PUT: FUll update
+PATCH: partial update
+
+Kelengkapan payload
+PUT: Field yg tidak dikirm bisa di set null atau default
+PATCH: field yang tidak dikirim akan tetap bernilai sama dengan sebelumnya
+
+Idempotensi
+PUT: ya
+PATCH: secara umum tidak, tergantung logika pembaruan di server
+
+Gunakan PUT:
+Ketika user ingin update seluruh profilnya, username, email, bio, dan lain lain
+Gunakam PATCH: 
+Update judul proyek aja tanpa ubah ubah yang lain
+
+2. Serializer pada DRF bertindak sebagai komponnen konversi dua arah
+ 1. Serialization: mengubah objek django jadi data python seperti list atau dict yg kemudian diubah ke JSON/XML untuk dikirm ke klien
+ 2. Deserialization: Terima payload JSON dari klien, Validasi data tersebut, kemudian konversi ke tipe data python atau Django yang bisa disimpan ke database
+
+Keuntungan DRF Serializer dibanding Manual DIctionary, cukup panggil serializer.is_valid() untuk validasi data dan serializer.save() untuk simpan di database, daripada JSON yang harus tulis manual. Serializer dapat digunakan agar kode yang kepanjangan bisa disingkat. 
+Penanganan relasi efisien dan rapi, daripada pakain .join(), serializer punya nested serializer, primarykeyrelatedfield, atau slugrelatedfield yang menangani serialisasi secara deklaratif dan konsisten.
+
+Serializer secara otomatis memuat skema form interaktif pada tampilan Browsable API DRF, memudahkan pengujian via browser dan terintegrasi langsung dengan alat pembuat dokumentasi API otomatis seperti OpenAPI / Swagger
+
+3. Perbedaan Otentikasi dan Ototrisasi
+
+Otentikasi: untuk user, identifikasi pengguna
+Otorisasi: Hak akses tiap pengguna. misal user biasa cuma bisa liat-liat. editor bisa ngubah ngubah, admin bisa hapus/buat
+
+Pemeriksaan hak akses wajib dilakukan di sisi server menggunakan Permission Class dan tidak boleh hanya mengandalkan penyembunyian tombol di template HTML. Pengguna bisa saja hapus atribut disabled atau otak atik elemen DOM pakai DevTools atau F12
+
+Menyembunyika tombol edit atau hapus, tapi penyerang bisa aja nebak nebak endpoint API secara langsung.
+Kalau server backed tidak memeriksa otorisasi, server akan tetap memproses tindakan bahaya tersebut walaupun tombol di template tidak pernah di klik
+
+4. CSRF Token pada SessionAuthentication & Testing DRF
+Cara kerja SessionAutenticcation yaitu mengandalkan session cookie yang disimpan di browser untuk mengenali identitas pengguna.
+Ketika request HTTP dikirim ke suatu domain, browser secara otomatis menyertakan cookie yang tersimpan untuk domain tersebut termasuk request yang dipicu oleh situs pihak ketiga(cross-site)
+Jika seorang user sedang terautentikasi di aplikasi utama, terus buka web aneh aneh(bahaya), situs bahaya tersebut bisa eksekusi script dan bikin update ke API utama. Karena browser menyertakan session cookie, API utama akan menganggap request tersebut valid.
+Makanya Django memerlukan CSRFToken, biasanya di header X-CSRFToken, agar situs bahaya tidak bisa baca cookie csrftoken milik domain utama, penyerang gabisa masukin tokenCSRF sembarangan.
+
+Kenapa pengujian menggunakan force_authenticate tidak cukup membuktikan csrf berjalan?
+Pada skenario unit test DRF, metode force_authentucate bekerja dengan menyuntikkan objek user langsung ke objek request. 
+foce_authenticare memang dirancang ybtuk mempercpat pengujian logika view tanpa harus memuat alur autentikasi HTTP lengkap. AKibatnya, metode ini secara otomatis melewati seluruh proses pemeriksaan middleware autentikasi dan pengecekan token CSRF
+Pengujian yang menggunakan force_authenticate akan selalu verhasil walau CSRF server sedng mati atau salah
+Untuk menguji apakah CSRF benar aktif, pengujian harus mensimulasikan alur autentikasi berbasis sesi yang sesungguhnya dan mencoba mengirim permitaan update data anpa header X-CSRFToken. Test sukses kalau server menolak permintaan  tersebut, 403 Forbidden
+
