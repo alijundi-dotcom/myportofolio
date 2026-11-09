@@ -164,3 +164,5 @@ foce_authenticare memang dirancang ybtuk mempercpat pengujian logika view tanpa 
 Pengujian yang menggunakan force_authenticate akan selalu verhasil walau CSRF server sedng mati atau salah
 Untuk menguji apakah CSRF benar aktif, pengujian harus mensimulasikan alur autentikasi berbasis sesi yang sesungguhnya dan mencoba mengirim permitaan update data anpa header X-CSRFToken. Test sukses kalau server menolak permintaan  tersebut, 403 Forbidden
 
+## Beberapa catatan terkait Tugas 6
+beberapa commit ada yang aku salah tulis, harusnya Tugas 6 tapi malah kutulis Tugas 7. Aku terlalu muscle memory, kuanggep Tugas 7 itu karena sebelumnya tutorial 7 kan, makanya aku malah kebablasan tulis Tugas 7
