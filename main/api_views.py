@@ -7,9 +7,9 @@ from rest_framework.decorators import (
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from main.models import Project
-from main.permissions import IsPortfolioOwnerOrReadOnly
-from main.serializers import ProjectSerializer
+from main.models import Project, Musics
+from main.permissions import IsPortfolioOwnerOrReadOnly, IsPortfolioOwnerOrEditorOrReadOnly
+from main.serializers import ProjectSerializer, MusicSerializer
 
 @api_view(["GET", "HEAD", "POST"])
 @authentication_classes([SessionAuthentication])
@@ -63,4 +63,53 @@ def project_star(request, project_id):
     else:
         project.starred_by.add(request.user)
     serializer = ProjectSerializer(project, context={"request": request})
+    return Response(serializer.data)
+
+@api_view(["GET", "HEAD", "POST"])
+@authentication_classes([SessionAuthentication])
+@permission_classes([IsPortfolioOwnerOrEditorOrReadOnly])
+def music_list(request):
+    if request.method in ("GET", "HEAD"):
+        musics = Musics.objects.prefetch_related("starred_by").order_by("title", "id")
+        title = request.query_params.get("title", "").strip()
+        if title:
+            musics = musics.filter(title__icontains=title)
+        serializer = MusicSerializer(musics, many=True, context={"request": request})
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+@api_view(["GET", "HEAD", "PUT", "PATCH", "DELETE"])
+@authentication_classes([SessionAuthentication])
+@permission_classes([IsPortfolioOwnerOrEditorOrReadOnly])
+def music_detail(request, music_id):
+    project = get_object_or_404(
+    Musics.objects.prefetch_related("starred_by"), pk=music_id,
+    )
+    if request.method in ("GET", "HEAD"):
+        serializer = MusicSerializer(project, context={"request": request})
+        return Response(serializer.data)
+    if request.method == "DELETE":
+        project.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    serializer = ProjectSerializer(
+        project, data=request.data, partial=request.method == "PATCH",
+        context={"request": request},
+    )
+
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(serializer.data)
+
+@api_view(["POST"])
+@authentication_classes([SessionAuthentication])
+@permission_classes([IsAuthenticated])
+def music_star(request, music_id):
+    music = get_object_or_404(Project, pk=music_id)
+    if music.starred_by.filter(pk=request.user.pk).exists():
+        music.starred_by.remove(request.user)
+    else:
+        music.starred_by.add(request.user)
+    serializer = MusicSerializer(music, context={"request": request})
     return Response(serializer.data)
